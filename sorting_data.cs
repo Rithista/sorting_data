@@ -9,14 +9,16 @@ using System.Reflection;
 
 namespace sorting_data
 {
-  public class Sort
+  public class Program
   {
     private static string _whichArray;
     private static List<Seismic> _dataList = new List<Seismic>();
     private static string whichData;
     private static string whatAnalysis;
+    private static string whatSet;
+    private static string ascDesc;
 
-    private static void printField(int i)
+    /*private static void printField(int i)
     {
       if (_whichArray == "a")
       {
@@ -62,7 +64,7 @@ namespace sorting_data
       {
         Console.WriteLine("{0}", _dataList.ElementAt(i).timestamp);
       }
-    }
+    }*/
     private static string getData(int i)
     {
       if (_whichArray == "a")
@@ -143,22 +145,31 @@ namespace sorting_data
         string iris = File.ReadLines(fileName).Skip(i).Take(1).First();
         fileName = string.Format(@"sorting_files\Timestamp_{0}.txt", j);
         string timestamp = File.ReadLines(fileName).Skip(i).Take(1).First();
-        Seismic s = new Seismic(year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp);
+        DateTime dateStamp = new DateTime();
+        dateStamp = DateTime.Parse(string.Format("{0} {1} {2} {3}", day, month, year, time));
+        Seismic s = new Seismic(year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp, dateStamp);
         _dataList.Add(s);
       }
     }
     public static void printStart()
     {
       Console.Clear();
+      Console.BufferHeight = Int16.MaxValue - 1;
+      var w = Console.WindowWidth;
+      var h = Console.WindowHeight;
+      if(w < 200 || h < 75)
+      {
+        Console.SetWindowSize(200, 75);
+      }
       Console.WriteLine("==================================================");
       Console.WriteLine("-Welcome to Harry's seismic data sorting program!-");
       Console.WriteLine("==================================================\n");
     }
 
-    static void Main(string[] args)
+    static void Main()
     {
       printStart();
-      Console.WriteLine("Please choose an item to sort by!");
+      Console.WriteLine("Please choose a Data type to sort by!");
       System.Threading.Thread.Sleep(100);
       Console.WriteLine("A : Year");
       System.Threading.Thread.Sleep(100);
@@ -183,39 +194,92 @@ namespace sorting_data
       Console.WriteLine("K : Timestamp\n");
       System.Threading.Thread.Sleep(100);
 
-      Console.Write("Array letter: ");
-
+      Console.Write("Data type letter: ");
+      bool dataTypeSelect = false;
       _whichArray = Console.ReadLine().ToLower();
+      string[] dataTypeValue = new string[11] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k" };
+      while (!dataTypeSelect) {
+        if(dataTypeValue.Contains(_whichArray))
+        {
+          dataTypeSelect = true;
+          break;
+        }
+        else
+        {
+          Console.Write("\nPlease enter a valid Data type letter: ");
+          _whichArray = Console.ReadLine().ToLower();
+        }
+      }
+
+
       int totalEntry = 0;
       foreach (string s in File.ReadAllLines(@"sorting_files\Year_1.txt"))
       {
         totalEntry++;
       }
-      Console.WriteLine("What set would you like analyse: 1 | 2 | M: ");
+
+      bool foundSet = false;
+      Console.Write("\nWhich data set would you like analyse: 1 | 2 | M for Merge: ");
       whatAnalysis = Console.ReadLine().ToLower();
-      if(whatAnalysis == "1")
+      while (!foundSet)
       {
-        inputFiles("1");
-      }
-      else if(whatAnalysis == "2")
-      {
-        inputFiles("2");
-      }
-      else if(whatAnalysis == "m")
-      {
-        inputFiles("1");
-        inputFiles("2");
+        if (whatAnalysis == "1")
+        {
+          inputFiles("1");
+          whatSet = "1";
+          foundSet = true;
+          break;
+        }
+        else if (whatAnalysis == "2")
+        {
+          inputFiles("2");
+          whatSet = "2";
+          foundSet = true;
+          break;
+        }
+        else if (whatAnalysis == "m")
+        {
+          inputFiles("1");
+          inputFiles("2");
+          whatSet = "1 and 2";
+          foundSet = true;
+          break;
+        }
+        else
+        {
+          printStart();
+          Console.Write("Please enter a correct value for the data set: 1 | 2 | M for Merge: ");
+          whatAnalysis = Console.ReadLine().ToLower();
+        }
       }
 
 
 
-      Console.WriteLine("");
-      Console.Write("Type A for Ascending, or D for Decending: ");
+      bool isDesc = false;
+      Console.Write("\nType A for Ascending, or D for Descending: ");
       string inputAscDec = Console.ReadLine().ToLower();
-      Console.WriteLine();
-      Console.Write("Type in the key search item: ");
-      string keySearch = Console.ReadLine().ToLower();
-      printStart();
+      while (!isDesc)
+      {
+        if (inputAscDec == "a") {
+          ascDesc = "Ascending";
+          isDesc = true;
+          break;
+        }
+        else if (inputAscDec == "d")
+        {
+          ascDesc = "Descending";
+          isDesc = true;
+          break;
+        }
+        else
+        {
+          printStart();
+          Console.Write("Please enter a valid letter, A for Ascending, or D for Descending: ");
+          inputAscDec = Console.ReadLine().ToLower();
+          isDesc = false;
+        }
+      }
+
 
 
       if (_whichArray == "a")
@@ -228,7 +292,7 @@ namespace sorting_data
         {
           _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "year";
+        whichData = "Year";
       }
       else if (_whichArray == "b")
       {
@@ -240,7 +304,7 @@ namespace sorting_data
         {
           _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "month";
+        whichData = "Month";
       }
       else if (_whichArray == "c")
       {
@@ -252,7 +316,7 @@ namespace sorting_data
         {
           _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "day";
+        whichData = "Day";
       }
       else if (_whichArray == "d")
       {
@@ -264,92 +328,96 @@ namespace sorting_data
         {
           _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "time";
+        whichData = "Time";
       }
       else if (_whichArray == "e")
       {
         if (inputAscDec == "a")
         {
-          _dataList.Sort((x, y) => x.magnitude.CompareTo(y.magnitude));
+          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
         }
         else if (inputAscDec == "d")
         {
-          _dataList.Sort((x, y) => y.magnitude.CompareTo(x.magnitude));
+          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "magnitude";
+        whichData = "Magnitude";
       }
       else if (_whichArray == "f")
       {
         if (inputAscDec == "a")
         {
-          _dataList.Sort((x, y) => x.latitude.CompareTo(y.latitude));
+          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
         }
         else if (inputAscDec == "d")
         {
-          _dataList.Sort((x, y) => y.latitude.CompareTo(x.latitude));
+          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "latitude";
+        whichData = "Latitude";
       }
       else if (_whichArray == "g")
       {
         if (inputAscDec == "a")
         {
-          _dataList.Sort((x, y) => x.longitude.CompareTo(y.longitude));
+          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
         }
         else if (inputAscDec == "d")
         {
-          _dataList.Sort((x, y) => y.longitude.CompareTo(x.longitude));
+          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "longitude";
+        whichData = "Longitude";
       }
       else if (_whichArray == "h")
       {
         if (inputAscDec == "a")
         {
-          _dataList.Sort((x, y) => x.depth.CompareTo(y.depth));
+          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
         }
         else if (inputAscDec == "d")
         {
-          _dataList.Sort((x, y) => y.depth.CompareTo(x.depth));
+          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "depth";
+        whichData = "Depth";
       }
       else if (_whichArray == "i")
       {
         if (inputAscDec == "a")
         {
-          _dataList.Sort((x, y) => x.region.CompareTo(y.region));
+          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
         }
         else if (inputAscDec == "d")
         {
-          _dataList.Sort((x, y) => y.region.CompareTo(x.region));
+          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "region";
+        whichData = "Region";
       }
       else if (_whichArray == "j")
       {
         if (inputAscDec == "a")
         {
-          _dataList.Sort((x, y) => x.iris.CompareTo(y.iris));
+          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
         }
         else if (inputAscDec == "d")
         {
-          _dataList.Sort((x, y) => y.iris.CompareTo(x.iris));
+          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "iris";
+        whichData = "Iris_ID";
       }
       else if (_whichArray == "k")
       {
         if (inputAscDec == "a")
         {
-          _dataList.Sort((x, y) => x.timestamp.CompareTo(y.timestamp));
+          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
         }
         else if (inputAscDec == "d")
         {
-          _dataList.Sort((x, y) => y.timestamp.CompareTo(x.timestamp));
+          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
         }
-        whichData = "timestamp";
+        whichData = "Timestamp";
       }
+      Console.Write("\nType in the key search item for Data type |{0}|: ", whichData);
+      string keySearch = Console.ReadLine().ToLower();
+      printStart();
+
       bool isFound = false;
       bool printed = false;
       while (!isFound)
@@ -364,6 +432,7 @@ namespace sorting_data
           {
             if (!printed)
             {
+              Console.WriteLine("Data set --> |{0}| Data type -->|{1}| Sorted -->|{2}| \n", whatSet, whichData, ascDesc);
               dataPrint();
               printed = true;
             }
@@ -373,9 +442,14 @@ namespace sorting_data
         }
         if (!isFound)
         {
-          Console.WriteLine("\nNo value found...\n");
-          Console.Write("Try again: ");
+          Console.WriteLine("Data set --> |{0}| Data type -->|{1}| Sorted -->|{2}|\n", whatSet, whichData, ascDesc);
+          Console.WriteLine("No value found in Data type\n");
+          Console.Write("Please enter another entry or type R to reset: ");
           keySearch = Console.ReadLine().ToLower();
+          if (keySearch == "r")
+          {
+            Main();
+          }
           printStart();
         }
         else if (isFound)
@@ -383,13 +457,49 @@ namespace sorting_data
           break;
         }
 
-      }            
+      }
+      bool exit = false;
+      Console.Write("\n\n\n\n\nType N for Next entry, or E to Exit the application: ");
+      while (!exit) {
+        string userExit = Console.ReadLine().ToLower();
+        if(userExit == "n")
+        {
+          exit = true;
+          Console.Write("\nReloading application");
+          Console.Write(".");
+          System.Threading.Thread.Sleep(500);
+          Console.Write(".");
+          System.Threading.Thread.Sleep(500);
+          Console.Write(".");
+          System.Threading.Thread.Sleep(500);
+          Main();
+          break;
+        }
+        else if (userExit == "e")
+        {
+          break;
+        }
+        else
+        {
+          Console.Write("\nPlease enter a valid letter: ");
+          exit = false;
+        }
+      }
+      Console.Write("\nExiting application in 3 seconds");
+      Console.Write(".");
+      System.Threading.Thread.Sleep(1000);
+      Console.Write(".");
+      System.Threading.Thread.Sleep(1000);
+      Console.Write(".");
+      System.Threading.Thread.Sleep(1000);
+      Console.Clear();
+      Environment.Exit(0);
     }
     private static void dataPrint()
     {
       Console.WriteLine();
-      Console.WriteLine("|Year   |Month       |Day    |Time      |Magni  |Lati   |Long   |Depth     |Region                          |Iris        |Timestamp");
-      Console.WriteLine("|-------|------------|-------|----------|-------|-------|-------|----------|--------------------------------|------------|----------");
+      Console.WriteLine("|Year   |Month       |Day    |Time      |Magni  |Lati     |Long     |Depth     |Region                          |Iris        |Timestamp");
+      Console.WriteLine("|-------|------------|-------|----------|-------|---------|---------|----------|--------------------------------|------------|----------");
     }
   }
 
@@ -417,7 +527,7 @@ namespace sorting_data
     public string stimestamp;
     public string whatSearch;
 
-    public Seismic(string pyear, string pmonth, string pday, string ptime, string pmagnitude, string platitude, string plongitude, string pdepth, string pregion, string piris, string ptimestamp)
+    public Seismic(string pyear, string pmonth, string pday, string ptime, string pmagnitude, string platitude, string plongitude, string pdepth, string pregion, string piris, string ptimestamp, DateTime finalDate)
     {
       year = Convert.ToInt32(pyear);
       syear = pyear.Trim();
@@ -425,8 +535,7 @@ namespace sorting_data
       day = Convert.ToInt32(pday);
       sday = pday.Trim();
       time = ptime.Trim();
-      dateStamp = new DateTime();
-      dateStamp = DateTime.Parse(string.Format("{0} {1} {2} {3}", day, month, year, time));
+      dateStamp = finalDate;
       magnitude = float.Parse(pmagnitude);
       smagnitude = pmagnitude.Trim();
       latitude = float.Parse(platitude);
@@ -444,7 +553,34 @@ namespace sorting_data
     }
     public void printData()
     {
-      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-5}  |{6,-5}  |{7,-8}  |{8,-30}  |{9,-10}  |{10,-15}  ", year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp);
+      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10}  |{10,-15}  ", year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp);
+    }
+  }
+
+  public class quickSort
+  {
+    public quickSort()
+    {
+
+    }
+  }
+
+  public class compare
+  {
+    public int dateCompare(DateTime a, DateTime b)
+    {
+      if(a > b)
+      {
+        return 1;
+      }
+      else if (a < b)
+      {
+        return -1;
+      }
+      else
+      {
+        return 0;
+      }
     }
   }
 }
