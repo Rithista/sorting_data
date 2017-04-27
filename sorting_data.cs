@@ -279,141 +279,57 @@ namespace sorting_data
           isDesc = false;
         }
       }
-
+      quickSort q = new quickSort();
+      q.quickSorting(_dataList, 0, _dataList.Count() - 1);
+      Console.WriteLine("Got to here");
 
 
       if (_whichArray == "a")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Year";
       }
       else if (_whichArray == "b")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Month";
       }
       else if (_whichArray == "c")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Day";
       }
       else if (_whichArray == "d")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Time";
       }
       else if (_whichArray == "e")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Magnitude";
       }
       else if (_whichArray == "f")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Latitude";
       }
       else if (_whichArray == "g")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Longitude";
       }
       else if (_whichArray == "h")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Depth";
       }
       else if (_whichArray == "i")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Region";
       }
       else if (_whichArray == "j")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Iris_ID";
       }
       else if (_whichArray == "k")
       {
-        if (inputAscDec == "a")
-        {
-          _dataList.Sort((x, y) => x.dateStamp.CompareTo(y.dateStamp));
-        }
-        else if (inputAscDec == "d")
-        {
-          _dataList.Sort((x, y) => y.dateStamp.CompareTo(x.dateStamp));
-        }
         whichData = "Timestamp";
       }
+
+
       Console.Write("\nType in the key search item for Data type |{0}|: ", whichData);
       string keySearch = Console.ReadLine().ToLower();
       printStart();
@@ -559,8 +475,46 @@ namespace sorting_data
 
   public class quickSort
   {
-    public quickSort()
+    public void quickSorting(List<Seismic> dataObjects, int left, int right)
     {
+      int i = left, j = right;
+      var pivot = dataObjects.ElementAt((left + right)/2).dateStamp;
+
+      while(i <= j)
+      {
+        while (dataObjects.ElementAt(i).dateStamp.CompareTo(pivot) < 0)
+        {
+          Console.WriteLine("moving pivot right");
+          i++;
+        }
+        while (dataObjects.ElementAt(j).dateStamp.CompareTo(pivot) > 0)
+        {
+          Console.WriteLine("moving pivot left");
+          j--;
+        }
+        if (i <= j)
+        {
+          // Swap
+          var tmp = dataObjects.ElementAt(i).dateStamp;
+          dataObjects.ElementAt(i).dateStamp = dataObjects.ElementAt(j).dateStamp;
+          dataObjects.ElementAt(j).dateStamp = tmp;
+          i++;
+          j--;
+        }
+      }
+      if (left < j)
+      {
+        Console.WriteLine("recursive");
+        quickSorting(dataObjects, left, j);
+      }
+
+      if (i < right)
+      {
+        Console.WriteLine("recursive");
+        quickSorting(dataObjects, i, right);
+      }
+
+
 
     }
   }
