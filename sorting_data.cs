@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using System.Text;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace sorting_data
 {
@@ -284,10 +285,44 @@ namespace sorting_data
           inputAscDec = Console.ReadLine().ToLower();
         }
       }
+      Console.Write("\nPlease enter which sort you would like to use, Q for Quicksort or B for Bubblesort: ");
+      bool sortEntered = false;
+      string sortString = Console.ReadLine().ToLower();
+      Stopwatch sortTimer = new Stopwatch();
+      string elapsedTime;
 
 
-      quickSort q = new quickSort();
-      q.quickSorting(_dataList, 0, _dataList.Count() - 1, isDescending);
+      while (!sortEntered)
+      {
+        if (sortString == "q")
+        {
+          sortTimer.Start();
+          Sorter.quickSort(_dataList, 0, _dataList.Count() - 1, isDescending);
+          sortTimer.Stop();
+          elapsedTime = String.Format("{0:0.0}", sortTimer.ElapsedMilliseconds);
+          Console.Write("\nQuicksort has sorted the data and took {0} milliseconds\n", elapsedTime);
+          sortEntered = true;
+          break;
+        }
+        else if (sortString == "b")
+        {
+          sortTimer.Start();
+          Sorter.bubbleSort(_dataList, isDescending);
+          sortTimer.Stop();
+          elapsedTime = String.Format("{0:0.0}", sortTimer.ElapsedMilliseconds);
+          Console.Write("\nBubblesort has sorted the data and took {0} milliseconds\n", elapsedTime);
+          sortEntered = true;
+          break;
+        }
+        else
+        {
+          printStart();
+          Console.Write("\nPlease enter a valid sort, Q for Quicksort or B for Bubblesort: ");
+          sortString = Console.ReadLine().ToLower();
+        }
+        
+        
+      }
 
       if (_whichArray == "a")
       {
@@ -494,7 +529,6 @@ namespace sorting_data
         {
           maxRegion = tmp.region;
         }
-
         if (tmp.dateStamp.Hour < minHours)
         {
           minHours = tmp.dateStamp.Hour;
@@ -516,9 +550,6 @@ namespace sorting_data
             }
           }
         }
-
-
-
         if (tmp.magnitude > maxMagnitude)
         {
           maxMagnitude = tmp.magnitude;
@@ -551,11 +582,6 @@ namespace sorting_data
         {
           minDepth = tmp.depth;
         }
-
-
-
-
-
         if (tmp.iris > maxIris)
         {
           maxIris = tmp.iris;
@@ -564,7 +590,6 @@ namespace sorting_data
         {
           minIris = tmp.iris;
         }
-
         if (tmp.timestamp > maxTimestamp)
         {
           maxTimestamp = tmp.timestamp;
@@ -576,7 +601,7 @@ namespace sorting_data
       }
       string[] months = new string[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
-      Console.WriteLine("Minimum Values in data...");
+      Console.WriteLine("|Minimum Values");
       Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}", minYear, months[minMonth - 1], minDay, String.Format("{0:00}:{1:00}:{2:00}", minHours, minMinutes, minSeconds), String.Format("{0:0.000}", minMagnitude), String.Format("{0:0.000}", minLatitude), String.Format("{0:0.000}", minLongitude), String.Format("{0:0.000}", minDepth), minRegion, minIris, minTimestamp);
       Console.WriteLine("Maximum Values in data...");
       Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}", maxYear, months[maxMonth - 1], maxDay, String.Format("{0:00}:{1:00}:{2:00}", maxHours, maxMinutes, maxSeconds), String.Format("{0:0.000}", maxMagnitude), String.Format("{0:0.000}", maxLatitude), String.Format("{0:0.000}", maxLongitude), String.Format("{0:0.000}", maxDepth), maxRegion, maxIris, maxTimestamp);
@@ -654,13 +679,11 @@ namespace sorting_data
         throw new ArgumentException("Object is not a Seismic");
       }
     }
-
-
   }
 
-  public class quickSort
+  public class Sorter
   {
-    public void quickSorting(List<Seismic> dataObjects, int left, int right, bool isDescending)
+    public static void quickSort(List<Seismic> dataObjects, int left, int right, bool isDescending)
     {
       int i = left, j = right;
       Seismic pivot = dataObjects.ElementAt((left + right)/2);
@@ -701,9 +724,6 @@ namespace sorting_data
           Seismic tmp = dataObjects.ElementAt(i);
           dataObjects[i] = dataObjects.ElementAt(j);
           dataObjects[j] = tmp;
-
-          //dataObjects.ElementAt(i) = dataObjects.ElementAt(j);
-          //dataObjects.ElementAt(j) = tmp;
           i++;
           j--;
         }
@@ -711,13 +731,41 @@ namespace sorting_data
       if (left < j)
       {
         
-        quickSorting(dataObjects, left, j, isDescending);
+        quickSort(dataObjects, left, j, isDescending);
       }
 
       if (i < right)
       {
         
-        quickSorting(dataObjects, i, right, isDescending);
+        quickSort(dataObjects, i, right, isDescending);
+      }
+    }
+    public static void bubbleSort(List<Seismic> dataObjects, bool isDescending)
+    {
+      Seismic tmp;
+      for (int i = 0; i < dataObjects.Count(); i++)
+      {
+        for (int sort = 0; sort < dataObjects.Count() - 1; sort++)
+        {
+          if (!isDescending)
+          {
+            if (dataObjects.ElementAt(sort).CompareTo(dataObjects.ElementAt(sort + 1)) > 0)
+            {
+              tmp = dataObjects.ElementAt(sort + 1);
+              dataObjects[sort + 1] = dataObjects[sort];
+              dataObjects[sort] = tmp;
+            }
+          }
+          if (isDescending)
+          {
+            if (dataObjects.ElementAt(sort).CompareTo(dataObjects.ElementAt(sort + 1)) < 0)
+            {
+              tmp = dataObjects.ElementAt(sort + 1);
+              dataObjects[sort + 1] = dataObjects[sort];
+              dataObjects[sort] = tmp;
+            }
+          }
+        }
       }
     }
   }
