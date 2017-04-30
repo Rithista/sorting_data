@@ -751,6 +751,7 @@ namespace sorting_data
           {
             if (dataObjects.ElementAt(sort).CompareTo(dataObjects.ElementAt(sort + 1)) > 0)
             {
+              //Swap
               tmp = dataObjects.ElementAt(sort + 1);
               dataObjects[sort + 1] = dataObjects[sort];
               dataObjects[sort] = tmp;
@@ -760,6 +761,7 @@ namespace sorting_data
           {
             if (dataObjects.ElementAt(sort).CompareTo(dataObjects.ElementAt(sort + 1)) < 0)
             {
+              //Swap
               tmp = dataObjects.ElementAt(sort + 1);
               dataObjects[sort + 1] = dataObjects[sort];
               dataObjects[sort] = tmp;
