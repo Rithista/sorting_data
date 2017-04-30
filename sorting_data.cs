@@ -145,9 +145,8 @@ namespace sorting_data
         string iris = File.ReadLines(fileName).Skip(i).Take(1).First();
         fileName = string.Format(@"sorting_files\Timestamp_{0}.txt", j);
         string timestamp = File.ReadLines(fileName).Skip(i).Take(1).First();
-        DateTime dateStamp = new DateTime();
-        dateStamp = DateTime.Parse(string.Format("{0} {1} {2} {3}", day, month, year, time));
-        Seismic s = new Seismic(year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp, dateStamp);
+        
+        Seismic s = new Seismic(year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp);
         _dataList.Add(s);
       }
     }
@@ -218,6 +217,8 @@ namespace sorting_data
         totalEntry++;
       }
 
+
+      _dataList.Clear();
       bool foundSet = false;
       Console.Write("\nWhich data set would you like analyse: 1 | 2 | M for Merge: ");
       whatAnalysis = Console.ReadLine().ToLower();
@@ -255,20 +256,25 @@ namespace sorting_data
 
 
 
-      bool isDesc = false;
+      bool isEntered = false;
+      bool isDescending = true;
       Console.Write("\nType A for Ascending, or D for Descending: ");
       string inputAscDec = Console.ReadLine().ToLower();
-      while (!isDesc)
+      while (!isEntered)
       {
         if (inputAscDec == "a") {
           ascDesc = "Ascending";
-          isDesc = true;
+          isDescending = false;
+
+          isEntered = true;
           break;
         }
         else if (inputAscDec == "d")
         {
           ascDesc = "Descending";
-          isDesc = true;
+          isDescending = true;
+
+          isEntered = true;
           break;
         }
         else
@@ -276,14 +282,13 @@ namespace sorting_data
           printStart();
           Console.Write("Please enter a valid letter, A for Ascending, or D for Descending: ");
           inputAscDec = Console.ReadLine().ToLower();
-          isDesc = false;
         }
       }
-      quickSort q = new quickSort();
-      q.quickSorting(_dataList, 0, _dataList.Count() - 1);
-      Console.WriteLine("Got to here");
 
-		//kek
+
+      quickSort q = new quickSort();
+      q.quickSorting(_dataList, 0, _dataList.Count() - 1, isDescending);
+
       if (_whichArray == "a")
       {
         whichData = "Year";
@@ -372,8 +377,9 @@ namespace sorting_data
         {
           break;
         }
-
       }
+      printMinMax();
+
       bool exit = false;
       Console.Write("\n\n\n\n\nType N for Next entry, or E to Exit the application: ");
       while (!exit) {
@@ -417,9 +423,167 @@ namespace sorting_data
       Console.WriteLine("|Year   |Month       |Day    |Time      |Magni  |Lati     |Long     |Depth     |Region                          |Iris        |Timestamp");
       Console.WriteLine("|-------|------------|-------|----------|-------|---------|---------|----------|--------------------------------|------------|----------");
     }
+
+    private static void printMinMax()
+    {
+      string floatMax = float.MaxValue.ToString();
+      string intMax = int.MaxValue.ToString();
+
+
+      Seismic min = new Seismic("9999", "December", "31", "23:59:59", floatMax, floatMax, floatMax, floatMax, "", intMax, intMax);
+      Seismic max = new Seismic("1", "January", "1", "00:00:00", "0", "0", "0", "0", "", "0", "0");
+      int minYear = 9999, maxYear = 1, minMonth = 12, maxMonth = 1, minDay = 31, maxDay = 1, minHours = 23, maxHours = 0, minMinutes = 59, maxMinutes = 0, minSeconds = 59, maxSeconds = 0, minIris = int.MaxValue, maxIris = 0, minTimestamp = int.MaxValue, maxTimestamp = 0;
+      float minMagnitude = float.MaxValue, maxMagnitude = 0, minLatitude = float.MaxValue, maxLatitude = 0, minLongitude = float.MaxValue, maxLongitude = 0, minDepth = float.MaxValue, maxDepth = 0;
+      string minRegion = "~", maxRegion = "";
+      int regionCompare;
+      for(int i = 0; i < _dataList.Count(); i++)
+      {
+        Seismic tmp = _dataList.ElementAt(i);
+        if(tmp.dateStamp.Year > maxYear)
+        {
+          maxYear = tmp.dateStamp.Year;
+        }
+        if (tmp.dateStamp.Year < minYear)
+        {
+          minYear = tmp.dateStamp.Year;
+        }
+        if (tmp.dateStamp.Month > maxMonth)
+        {
+          maxMonth = tmp.dateStamp.Month;
+        }
+        if (tmp.dateStamp.Month < minMonth)
+        {
+          minMonth = tmp.dateStamp.Month;
+        }
+        if (tmp.dateStamp.Day > maxDay)
+        {
+          maxDay = tmp.dateStamp.Day;
+        }
+        if (tmp.dateStamp.Day < minDay)
+        {
+          minDay = tmp.dateStamp.Day;
+        }
+        if (tmp.dateStamp.Hour > maxHours)
+        {
+          maxHours = tmp.dateStamp.Hour;
+          maxMinutes = tmp.dateStamp.Minute;
+          maxSeconds = tmp.dateStamp.Second;
+        }
+        if(tmp.dateStamp.Hour == maxHours)
+        {
+          if (tmp.dateStamp.Minute > maxMinutes)
+          {
+            maxMinutes = tmp.dateStamp.Minute;
+            maxSeconds = tmp.dateStamp.Second;
+          }
+          if (tmp.dateStamp.Minute == maxMinutes)
+          {
+            if(tmp.dateStamp.Second > maxSeconds)
+            {
+              maxSeconds = tmp.dateStamp.Second;
+            }
+          }
+        }
+        regionCompare = String.CompareOrdinal(tmp.region, minRegion);
+        if (regionCompare < 0)
+        {
+          minRegion = tmp.region;
+        }
+        regionCompare = String.CompareOrdinal(tmp.region, maxRegion);
+        if (regionCompare > 0)
+        {
+          maxRegion = tmp.region;
+        }
+
+        if (tmp.dateStamp.Hour < minHours)
+        {
+          minHours = tmp.dateStamp.Hour;
+          minMinutes = tmp.dateStamp.Minute;
+          minSeconds = tmp.dateStamp.Second;
+        }
+        if (tmp.dateStamp.Hour == minHours)
+        {
+          if (tmp.dateStamp.Minute < minMinutes)
+          {
+            minMinutes = tmp.dateStamp.Minute;
+            minSeconds = tmp.dateStamp.Second;
+          }
+          if (tmp.dateStamp.Minute == minMinutes)
+          {
+            if (tmp.dateStamp.Second < minSeconds)
+            {
+              minSeconds = tmp.dateStamp.Second;
+            }
+          }
+        }
+
+
+
+        if (tmp.magnitude > maxMagnitude)
+        {
+          maxMagnitude = tmp.magnitude;
+        }
+        if (tmp.magnitude < minMagnitude)
+        {
+          minMagnitude = tmp.magnitude;
+        }
+        if (tmp.latitude > maxLatitude)
+        {
+          maxLatitude = tmp.latitude;
+        }
+        if (tmp.latitude < minLatitude)
+        {
+          minLatitude = tmp.latitude;
+        }
+        if (tmp.longitude > maxLongitude)
+        {
+          maxLongitude = tmp.longitude;
+        }
+        if (tmp.longitude < minLongitude)
+        {
+          minLongitude = tmp.longitude;
+        }
+        if (tmp.depth > maxDepth)
+        {
+          maxDepth = tmp.depth;
+        }
+        if (tmp.depth < minDepth)
+        {
+          minDepth = tmp.depth;
+        }
+
+
+
+
+
+        if (tmp.iris > maxIris)
+        {
+          maxIris = tmp.iris;
+        }
+        if (tmp.iris < minIris)
+        {
+          minIris = tmp.iris;
+        }
+
+        if (tmp.timestamp > maxTimestamp)
+        {
+          maxTimestamp = tmp.timestamp;
+        }
+        if (tmp.timestamp < minTimestamp)
+        {
+          minTimestamp = tmp.timestamp;
+        }
+      }
+      string[] months = new string[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+      Console.WriteLine("Minimum Values in data...");
+      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}", minYear, months[minMonth - 1], minDay, String.Format("{0:00}:{1:00}:{2:00}", minHours, minMinutes, minSeconds), String.Format("{0:0.000}", minMagnitude), String.Format("{0:0.000}", minLatitude), String.Format("{0:0.000}", minLongitude), String.Format("{0:0.000}", minDepth), minRegion, minIris, minTimestamp);
+      Console.WriteLine("Maximum Values in data...");
+      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}", maxYear, months[maxMonth - 1], maxDay, String.Format("{0:00}:{1:00}:{2:00}", maxHours, maxMinutes, maxSeconds), String.Format("{0:0.000}", maxMagnitude), String.Format("{0:0.000}", maxLatitude), String.Format("{0:0.000}", maxLongitude), String.Format("{0:0.000}", maxDepth), maxRegion, maxIris, maxTimestamp);
+    }
   }
 
-  public class Seismic
+  public class Seismic : IComparable
   {
     public int year;
     public string syear;
@@ -443,7 +607,7 @@ namespace sorting_data
     public string stimestamp;
     public string whatSearch;
 
-    public Seismic(string pyear, string pmonth, string pday, string ptime, string pmagnitude, string platitude, string plongitude, string pdepth, string pregion, string piris, string ptimestamp, DateTime finalDate)
+    public Seismic(string pyear, string pmonth, string pday, string ptime, string pmagnitude, string platitude, string plongitude, string pdepth, string pregion, string piris, string ptimestamp)
     {
       year = Convert.ToInt32(pyear);
       syear = pyear.Trim();
@@ -451,7 +615,6 @@ namespace sorting_data
       day = Convert.ToInt32(pday);
       sday = pday.Trim();
       time = ptime.Trim();
-      dateStamp = finalDate;
       magnitude = float.Parse(pmagnitude);
       smagnitude = pmagnitude.Trim();
       latitude = float.Parse(platitude);
@@ -465,76 +628,98 @@ namespace sorting_data
       siris = piris.Trim();
       timestamp = Convert.ToInt32(ptimestamp);
       stimestamp = ptimestamp.Trim();
+      dateStamp = DateTime.Parse(string.Format("{0} {1} {2} {3}", day, month, year, time));
 
     }
+
+
     public void printData()
     {
-      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10}  |{10,-15}  ", year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp);
+      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10}  |{10,-15}  ", year, month, day, time, String.Format("{0:0.000}", magnitude), String.Format("{0:00.000}", latitude), String.Format("{0:00.000}", longitude), String.Format("{0:0.000}", depth), region, iris, timestamp);
     }
+
+    public int CompareTo(object obj)
+    {
+      if(obj == null)
+      {
+        return 1;
+      }
+      Seismic other = obj as Seismic;
+      if(other != null)
+      {
+        return this.dateStamp.CompareTo(other.dateStamp);
+      }
+      else
+      {
+        throw new ArgumentException("Object is not a Seismic");
+      }
+    }
+
+
   }
 
   public class quickSort
   {
-    public void quickSorting(List<Seismic> dataObjects, int left, int right)
+    public void quickSorting(List<Seismic> dataObjects, int left, int right, bool isDescending)
     {
       int i = left, j = right;
-      var pivot = dataObjects.ElementAt((left + right)/2).dateStamp;
+      Seismic pivot = dataObjects.ElementAt((left + right)/2);
 
       while(i <= j)
       {
-        while (dataObjects.ElementAt(i).dateStamp.CompareTo(pivot) < 0)
+        if (isDescending)
         {
-          Console.WriteLine("moving pivot right");
-          i++;
+          while (dataObjects.ElementAt(i).CompareTo(pivot) > 0)
+          {
+            i++;
+          }
         }
-        while (dataObjects.ElementAt(j).dateStamp.CompareTo(pivot) > 0)
+        else {
+          while (dataObjects.ElementAt(i).CompareTo(pivot) < 0)
+          {
+            i++;
+          }
+        }
+
+        if (isDescending)
         {
-          Console.WriteLine("moving pivot left");
-          j--;
+          while (dataObjects.ElementAt(j).CompareTo(pivot) < 0)
+          {
+            j--;
+          }
+        }
+        else
+        {
+          while (dataObjects.ElementAt(j).CompareTo(pivot) > 0)
+          {
+            j--;
+          }
         }
         if (i <= j)
         {
           // Swap
-          var tmp = dataObjects.ElementAt(i).dateStamp;
-          dataObjects.ElementAt(i).dateStamp = dataObjects.ElementAt(j).dateStamp;
-          dataObjects.ElementAt(j).dateStamp = tmp;
+          Seismic tmp = dataObjects.ElementAt(i);
+          dataObjects[i] = dataObjects.ElementAt(j);
+          dataObjects[j] = tmp;
+
+          //dataObjects.ElementAt(i) = dataObjects.ElementAt(j);
+          //dataObjects.ElementAt(j) = tmp;
           i++;
           j--;
         }
       }
       if (left < j)
       {
-        Console.WriteLine("recursive");
-        quickSorting(dataObjects, left, j);
+        
+        quickSorting(dataObjects, left, j, isDescending);
       }
 
       if (i < right)
       {
-        Console.WriteLine("recursive");
-        quickSorting(dataObjects, i, right);
-      }
-
-
-
-    }
-  }
-
-  public class compare
-  {
-    public int dateCompare(DateTime a, DateTime b)
-    {
-      if(a > b)
-      {
-        return 1;
-      }
-      else if (a < b)
-      {
-        return -1;
-      }
-      else
-      {
-        return 0;
+        
+        quickSorting(dataObjects, i, right, isDescending);
       }
     }
   }
-}
+ }
+
