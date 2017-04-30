@@ -283,7 +283,7 @@ namespace sorting_data
       q.quickSorting(_dataList, 0, _dataList.Count() - 1);
       Console.WriteLine("Got to here");
 
-		//kek
+
       if (_whichArray == "a")
       {
         whichData = "Year";
