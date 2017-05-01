@@ -1,4 +1,15 @@
-﻿using System;
+﻿/*
++------------------------------------------------------------+
+| Module Name: Algorithms and Complexity                     |
+| Module Purpose: Sort Seismic data (Earthquake)             |
+| Inputs: User                                               |
+| Outputs: Console                                           |
+| Programmer name: Harry Jones                               |
++------------------------------------------------------------+
+ */
+
+//Importing C# syntax
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections;
@@ -8,10 +19,11 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace sorting_data
+namespace sorting_data //Namespace to cover whole program
 {
-  public class Program
+  public class Program //Start of class Program
   {
+    //Private static variables initalised at the top so they are accessable throughout the class
     private static string _whichArray;
     private static List<Seismic> _dataList = new List<Seismic>();
     private static string whichData;
@@ -19,53 +31,7 @@ namespace sorting_data
     private static string whatSet;
     private static string ascDesc;
 
-    /*private static void printField(int i)
-    {
-      if (_whichArray == "a")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).year);
-      }
-      else if (_whichArray == "b")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).month);
-      }
-      else if (_whichArray == "c")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).day);
-      }
-      else if (_whichArray == "d")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).time);
-      }
-      else if (_whichArray == "e")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).magnitude);
-      }
-      else if (_whichArray == "f")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).latitude);
-      }
-      else if (_whichArray == "g")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).longitude);
-      }
-      else if (_whichArray == "h")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).depth);
-      }
-      else if (_whichArray == "i")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).region);
-      }
-      else if (_whichArray == "j")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).iris);
-      }
-      else if (_whichArray == "k")
-      {
-        Console.WriteLine("{0}", _dataList.ElementAt(i).timestamp);
-      }
-    }*/
+    //static method which gets the current data so it can be compared against to be printed
     private static string getData(int i)
     {
       if (_whichArray == "a")
@@ -117,11 +83,11 @@ namespace sorting_data
         return "";
       }
     }
+
+    //static method which imports the data depending on the users input with args j
     private static void inputFiles(string j)
     {
       string fileName = string.Format(@"sorting_files\Year_{0}.txt", j);
-
-
       for (int i = 0; i < File.ReadAllLines(fileName).Length; i++)
       {
         fileName = string.Format(@"sorting_files\Year_{0}.txt", j);
@@ -146,11 +112,12 @@ namespace sorting_data
         string iris = File.ReadLines(fileName).Skip(i).Take(1).First();
         fileName = string.Format(@"sorting_files\Timestamp_{0}.txt", j);
         string timestamp = File.ReadLines(fileName).Skip(i).Take(1).First();
-        
-        Seismic s = new Seismic(year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp);
-        _dataList.Add(s);
+        Seismic s = new Seismic(year, month, day, time, magnitude, latitude, longitude, depth, region, iris, timestamp); //creates a new Seismic object from the imported data
+        _dataList.Add(s); //Add object to the data list
       }
     }
+
+    //static method which clears the console, sets its height and width, and prints out a fancy screen display (not really needed)
     public static void printStart()
     {
       Console.Clear();
@@ -161,40 +128,93 @@ namespace sorting_data
       {
         Console.SetWindowSize(200, 75);
       }
-      Console.WriteLine("==================================================");
-      Console.WriteLine("-Welcome to Harry's seismic data sorting program!-");
-      Console.WriteLine("==================================================\n");
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("=======================================================");
+      Console.ForegroundColor = ConsoleColor.Yellow;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("                | | | |                     | |       ");
+      Console.ForegroundColor = ConsoleColor.Green;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("  ___  __ _ _ __| |_| |__   __ _ _   _  __ _| | _____ ");
+      Console.ForegroundColor = ConsoleColor.Magenta;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine(" / _ \\/ _` | '__| __| '_ \\ / _` | | | |/ _` | |/ / _ \\");
+      Console.ForegroundColor = ConsoleColor.Cyan;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("|  __/ (_| | |  | |_| | | | (_| | |_| | (_| |   <  __/");
+      Console.ForegroundColor = ConsoleColor.DarkBlue;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine(" \\___|\\__,_|_|   \\__|_| |_|\\__, |\\__,_|\\__,_|_|\\_\\___|");
+      Console.ForegroundColor = ConsoleColor.DarkCyan;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("                              | |                     ");
+      Console.ForegroundColor = ConsoleColor.DarkYellow;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("                              |_|                   ");
+      Console.ForegroundColor = ConsoleColor.DarkGreen;
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("=======================================================");
+      Console.ForegroundColor = ConsoleColor.Red;
+      System.Threading.Thread.Sleep(10);
+      Console.SetCursorPosition(0, 0);
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine("=======================================================");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("                | | | |                     | |       ");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("  ___  __ _ _ __| |_| |__   __ _ _   _  __ _| | _____ ");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine(" / _ \\/ _` | '__| __| '_ \\ / _` | | | |/ _` | |/ / _ \\");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("|  __/ (_| | |  | |_| | | | (_| | |_| | (_| |   <  __/");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine(" \\___|\\__,_|_|   \\__|_| |_|\\__, |\\__,_|\\__,_|_|\\_\\___|");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("                              | |                     ");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("                              |_|                   ");
+      System.Threading.Thread.Sleep(10);
+      Console.WriteLine("=======================================================");
+      System.Threading.Thread.Sleep(10);
+
     }
 
-    static void Main()
+
+    static void Main() //Start of Main
     {
+      //prints the start of the program
+      //then prints out all the options the user
+      //has for data types to select
       printStart();
       Console.WriteLine("Please choose a Data type to sort by!");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("A : Year");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("B : Month");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("C : Day");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("D : Time (UTC)");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("E : Magnitude");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("F : Latitude");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("G : Longitude");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("H : Depth");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("I : Region");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("J : IRIS_ID");
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(10);
       Console.WriteLine("K : Timestamp\n");
-      System.Threading.Thread.Sleep(100);
-
+      System.Threading.Thread.Sleep(10);
       Console.Write("Data type letter: ");
+
+      //while loop which checks to see if the entered letter from the user
+      //is a letter on the list
+      //if not then it asks for the users input again
       bool dataTypeSelect = false;
       _whichArray = Console.ReadLine().ToLower();
       string[] dataTypeValue = new string[11] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k" };
@@ -211,14 +231,10 @@ namespace sorting_data
         }
       }
 
-
-      int totalEntry = 0;
-      foreach (string s in File.ReadAllLines(@"sorting_files\Year_1.txt"))
-      {
-        totalEntry++;
-      }
-
-
+      //Clears out the previous object list if the program has been restarted
+      //asks for the users input on what data sets to use
+      //while loop which runs while the user input is not
+      //of the correct type
       _dataList.Clear();
       bool foundSet = false;
       Console.Write("\nWhich data set would you like analyse: 1 | 2 | M for Merge: ");
@@ -255,8 +271,8 @@ namespace sorting_data
         }
       }
 
-
-
+      //gets users input for ascending and descending
+      //while loop runs until the users input matches the criteria
       bool isEntered = false;
       bool isDescending = true;
       Console.Write("\nType A for Ascending, or D for Descending: ");
@@ -285,45 +301,49 @@ namespace sorting_data
           inputAscDec = Console.ReadLine().ToLower();
         }
       }
+
+      //gets users input for which sort to use, Quicksort or bubblesort
+      //creates a stop watch to show the user the time effeciency
+      //while loop runs until user input matches criteria
       Console.Write("\nPlease enter which sort you would like to use, Q for Quicksort or B for Bubblesort: ");
       bool sortEntered = false;
       string sortString = Console.ReadLine().ToLower();
       Stopwatch sortTimer = new Stopwatch();
       string elapsedTime;
 
-
       while (!sortEntered)
       {
-        if (sortString == "q")
+        if (sortString == "q") //Quicksort
         {
           sortTimer.Start();
           Sorter.quickSort(_dataList, 0, _dataList.Count() - 1, isDescending);
           sortTimer.Stop();
           elapsedTime = String.Format("{0:0.0}", sortTimer.ElapsedMilliseconds);
-          Console.Write("\nQuicksort has sorted the data and took {0} milliseconds\n", elapsedTime);
+          Console.Write("\nQuicksort has sorted the data and took {0} milliseconds with {1} operations\n", elapsedTime, Sorter.quickSortTotal());
           sortEntered = true;
           break;
         }
-        else if (sortString == "b")
+        else if (sortString == "b") //Bubblesort
         {
           sortTimer.Start();
           Sorter.bubbleSort(_dataList, isDescending);
           sortTimer.Stop();
           elapsedTime = String.Format("{0:0.0}", sortTimer.ElapsedMilliseconds);
-          Console.Write("\nBubblesort has sorted the data and took {0} milliseconds\n", elapsedTime);
+          Console.Write("\nBubblesort has sorted the data and took {0} milliseconds with {1} operations\n", elapsedTime, Sorter.bubbleSortTotal());
           sortEntered = true;
           break;
         }
-        else
+        else //Try again
         {
           printStart();
-          Console.Write("\nPlease enter a valid sort, Q for Quicksort or B for Bubblesort: ");
+          Console.Write("Please enter a valid sort, Q for Quicksort or B for Bubblesort: ");
           sortString = Console.ReadLine().ToLower();
-        }
-        
-        
+        } 
       }
 
+      //If block which converts the users input
+      //at the beggining into a string which can
+      //be used to display their data type selection
       if (_whichArray == "a")
       {
         whichData = "Year";
@@ -369,38 +389,43 @@ namespace sorting_data
         whichData = "Timestamp";
       }
 
-
+      //Asks users what they would like to search for
+      //in the current selected data type
+      //while loop runs for each entry from their search
+      //loop also prints out error message if no search is found
       Console.Write("\nType in the key search item for Data type |{0}|: ", whichData);
       string keySearch = Console.ReadLine().ToLower();
       printStart();
-
       bool isFound = false;
       bool printed = false;
       while (!isFound)
       {
         for (int i = 0; i < _dataList.Count; i++)
         {
-          string v = getData(i);
-          //Console.WriteLine("Value {0}, Search key {1}", v, keySearch);
+          string v = getData(i); //Finds current data type key word
 
          
-          if (String.Equals(v.ToLower(), keySearch.ToLower()))
+          if (String.Equals(v.ToLower(), keySearch.ToLower())) //Compares current data type key word with users search word
           {
-            if (!printed)
+            if (!printed) //only runs once
             {
-              Console.WriteLine("Data set --> |{0}| Data type -->|{1}| Sorted -->|{2}| \n", whatSet, whichData, ascDesc);
+              Console.ForegroundColor = ConsoleColor.Yellow;
+              Console.WriteLine("Data set --> |{0}| Data type -->|{1}| Sorted -->|{2}| Search -->|{3}| \n", whatSet, whichData, ascDesc, keySearch);
+              Console.ForegroundColor = ConsoleColor.White;
               dataPrint();
               printed = true;
             }
-            _dataList.ElementAt(i).printData();
-            isFound = true;
+            _dataList.ElementAt(i).printData(); //Prints out the current record if the string compare is true
+            isFound = true; //lets the while loop know not to run again once the for loop has finished
           }
         }
-        if (!isFound)
+        if (!isFound) //If the search didn't find any matching data words, print out error message
         {
+          Console.ForegroundColor = ConsoleColor.Red;
           Console.WriteLine("Data set --> |{0}| Data type -->|{1}| Sorted -->|{2}|\n", whatSet, whichData, ascDesc);
+          Console.ForegroundColor = ConsoleColor.White;
           Console.WriteLine("No value found in Data type\n");
-          Console.Write("Please enter another entry or type R to reset: ");
+          Console.Write("Please enter another entry or type R to reset: "); //Give the user an option to try again or reset
           keySearch = Console.ReadLine().ToLower();
           if (keySearch == "r")
           {
@@ -413,8 +438,12 @@ namespace sorting_data
           break;
         }
       }
-      printMinMax();
+      printMinMax(); //Print out the minimum and maximum values in the dataset once outside of the loop
+                     //you can only make it outside of this loop if you found atleast one data word match
 
+      //Gives choice to user
+      //another entry of exit the application
+      //while loop runs until user input matches criteria
       bool exit = false;
       Console.Write("\n\n\n\n\nType N for Next entry, or E to Exit the application: ");
       while (!exit) {
@@ -451,29 +480,36 @@ namespace sorting_data
       System.Threading.Thread.Sleep(1000);
       Console.Clear();
       Environment.Exit(0);
-    }
+    }//End of main
+
+    //static method which prints out the head of record table, this is only called once in the while loop
     private static void dataPrint()
     {
       Console.WriteLine();
-      Console.WriteLine("|Year   |Month       |Day    |Time      |Magni  |Lati     |Long     |Depth     |Region                          |Iris        |Timestamp");
-      Console.WriteLine("|-------|------------|-------|----------|-------|---------|---------|----------|--------------------------------|------------|----------");
+      Console.ForegroundColor = ConsoleColor.Magenta;
+      Console.WriteLine("|===============================================================|Found Records|========================================================|");
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine("|Year   |Month       |Day    |Time      |Magni  |Lati     |Long     |Depth     |Region                          |Iris       |Timestamp |");
+      Console.WriteLine("|-------|------------|-------|----------|-------|---------|---------|----------|--------------------------------|-----------|----------|");
     }
 
+    //static method which finds the minimum and maximum of the imported data
+    //this is done through a linear search
     private static void printMinMax()
     {
+      //variable declaring at the top of the method
       string floatMax = float.MaxValue.ToString();
       string intMax = int.MaxValue.ToString();
-
-
-      Seismic min = new Seismic("9999", "December", "31", "23:59:59", floatMax, floatMax, floatMax, floatMax, "", intMax, intMax);
-      Seismic max = new Seismic("1", "January", "1", "00:00:00", "0", "0", "0", "0", "", "0", "0");
-      int minYear = 9999, maxYear = 1, minMonth = 12, maxMonth = 1, minDay = 31, maxDay = 1, minHours = 23, maxHours = 0, minMinutes = 59, maxMinutes = 0, minSeconds = 59, maxSeconds = 0, minIris = int.MaxValue, maxIris = 0, minTimestamp = int.MaxValue, maxTimestamp = 0;
+      int minYear = 9999, maxYear = 1, minMonth = 12, maxMonth = 1, minDay = 31, maxDay = 1, minHours = 23, maxHours = 0, minMinutes = 59, maxMinutes = 0,
+          minSeconds = 59, maxSeconds = 0, minIris = int.MaxValue, maxIris = 0, minTimestamp = int.MaxValue, maxTimestamp = 0;
       float minMagnitude = float.MaxValue, maxMagnitude = 0, minLatitude = float.MaxValue, maxLatitude = 0, minLongitude = float.MaxValue, maxLongitude = 0, minDepth = float.MaxValue, maxDepth = 0;
       string minRegion = "~", maxRegion = "";
       int regionCompare;
-      for(int i = 0; i < _dataList.Count(); i++)
+
+      for(int i = 0; i < _dataList.Count(); i++)//For loop which runs for each of the entries in the data list of objects
       {
-        Seismic tmp = _dataList.ElementAt(i);
+        Seismic tmp = _dataList.ElementAt(i); //tmp = Current data object
+
         if(tmp.dateStamp.Year > maxYear)
         {
           maxYear = tmp.dateStamp.Year;
@@ -599,17 +635,31 @@ namespace sorting_data
           minTimestamp = tmp.timestamp;
         }
       }
+      //string array which will convert the DateTime output into a month string
       string[] months = new string[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
-      Console.WriteLine("|Minimum Values");
-      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}", minYear, months[minMonth - 1], minDay, String.Format("{0:00}:{1:00}:{2:00}", minHours, minMinutes, minSeconds), String.Format("{0:0.000}", minMagnitude), String.Format("{0:0.000}", minLatitude), String.Format("{0:0.000}", minLongitude), String.Format("{0:0.000}", minDepth), minRegion, minIris, minTimestamp);
-      Console.WriteLine("Maximum Values in data...");
-      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}", maxYear, months[maxMonth - 1], maxDay, String.Format("{0:00}:{1:00}:{2:00}", maxHours, maxMinutes, maxSeconds), String.Format("{0:0.000}", maxMagnitude), String.Format("{0:0.000}", maxLatitude), String.Format("{0:0.000}", maxLongitude), String.Format("{0:0.000}", maxDepth), maxRegion, maxIris, maxTimestamp);
+      //Console printout for minimum and maximum values found in the linear search
+      Console.ForegroundColor = ConsoleColor.Cyan;
+      Console.WriteLine("\n\n|==================================================|Minimum Values in data set {0,-7}|================================================|", whatSet);
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine("|Year   |Month       |Day    |Time      |Magni  |Lati     |Long     |Depth     |Region                          |Iris       |Timestamp |");
+      Console.WriteLine("|-------|------------|-------|----------|-------|---------|---------|----------|--------------------------------|-----------|----------|");
+      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}|", minYear, months[minMonth - 1], minDay, String.Format("{0:00}:{1:00}:{2:00}", minHours, minMinutes, minSeconds), String.Format("{0:0.000}", minMagnitude), String.Format("{0:0.000}", minLatitude), String.Format("{0:0.000}", minLongitude), String.Format("{0:0.000}", minDepth), minRegion, minIris, minTimestamp);
+      Console.WriteLine("|______________________________________________________________________________________________________________________________________|");
+      Console.ForegroundColor = ConsoleColor.Green;
+      Console.WriteLine("\n\n|==================================================|Maximum Values in data set {0,-7}|================================================|", whatSet);
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine("|Year   |Month       |Day    |Time      |Magni  |Lati     |Long     |Depth     |Region                          |Iris       |Timestamp |");
+      Console.WriteLine("|-------|------------|-------|----------|-------|---------|---------|----------|--------------------------------|-----------|----------|");
+      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10} |{10,-10}|", maxYear, months[maxMonth - 1], maxDay, String.Format("{0:00}:{1:00}:{2:00}", maxHours, maxMinutes, maxSeconds), String.Format("{0:0.000}", maxMagnitude), String.Format("{0:0.000}", maxLatitude), String.Format("{0:0.000}", maxLongitude), String.Format("{0:0.000}", maxDepth), maxRegion, maxIris, maxTimestamp);
+      Console.WriteLine("|______________________________________________________________________________________________________________________________________|");
     }
-  }
+  }//End of class Program
 
+  //Start of class Seismic
   public class Seismic : IComparable
   {
+    //public variable declaring at top of class
     public int year;
     public string syear;
     public string month;
@@ -632,6 +682,7 @@ namespace sorting_data
     public string stimestamp;
     public string whatSearch;
 
+    //public constructor which builds the seismic objects from Program.getData()
     public Seismic(string pyear, string pmonth, string pday, string ptime, string pmagnitude, string platitude, string plongitude, string pdepth, string pregion, string piris, string ptimestamp)
     {
       year = Convert.ToInt32(pyear);
@@ -653,61 +704,70 @@ namespace sorting_data
       siris = piris.Trim();
       timestamp = Convert.ToInt32(ptimestamp);
       stimestamp = ptimestamp.Trim();
-      dateStamp = DateTime.Parse(string.Format("{0} {1} {2} {3}", day, month, year, time));
-
+      dateStamp = DateTime.Parse(string.Format("{0} {1} {2} {3}", day, month, year, time)); //dateStamp which will be used to sort the data
     }
 
-
+    //public method to print out the current Seismic object when this method is called
     public void printData()
     {
-      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-10}  |{10,-15}  ", year, month, day, time, String.Format("{0:0.000}", magnitude), String.Format("{0:00.000}", latitude), String.Format("{0:00.000}", longitude), String.Format("{0:0.000}", depth), region, iris, timestamp);
+      Console.WriteLine("|{0,-5}  |{1,-10}  |{2,-5}  |{3,-5}  |{4,-5}  |{5,-7}  |{6,-7}  |{7,-8}  |{8,-30}  |{9,-9}  |{10}|", year, month, day, time, String.Format("{0:0.000}", magnitude), String.Format("{0:00.000}", latitude), String.Format("{0:00.000}", longitude), String.Format("{0:0.000}", depth), region, iris, timestamp);
     }
 
+    //public method which compares an object with dateStamp, used in sorting
     public int CompareTo(object obj)
     {
-      if(obj == null)
+      if(obj == null) //if the comparing object doesn't have an inherent value
       {
         return 1;
       }
-      Seismic other = obj as Seismic;
-      if(other != null)
+      Seismic other = obj as Seismic; //Sets other to to be the argument object Seismic
+      if(other != null) //Runs if the argument has a value
       {
-        return this.dateStamp.CompareTo(other.dateStamp);
+        return this.dateStamp.CompareTo(other.dateStamp); //dateStamp is what the data is then sorted by, this could be changed
+                                                          //to something else like magnitude, any other Seismic object attribute
       }
-      else
+      else //returns error message if it doesn't understand what the object is
       {
         throw new ArgumentException("Object is not a Seismic");
       }
     }
-  }
+  }//end of class Seismic
 
+  //Start of public class Sorter
   public class Sorter
   {
+    public static int quickSortCount = 0;
+    public static int bubbleSortCount = 0;
+
+    //Quicksort method
     public static void quickSort(List<Seismic> dataObjects, int left, int right, bool isDescending)
     {
       int i = left, j = right;
       Seismic pivot = dataObjects.ElementAt((left + right)/2);
 
-      while(i <= j)
+      while(i <= j) //while loop runs left and right are not set as each other
       {
-        if (isDescending)
+        if (isDescending) //depends on users input for asc or desc
         {
           while (dataObjects.ElementAt(i).CompareTo(pivot) > 0)
           {
+            quickSortCount++;
             i++;
           }
         }
         else {
           while (dataObjects.ElementAt(i).CompareTo(pivot) < 0)
           {
+            quickSortCount++;
             i++;
           }
         }
 
-        if (isDescending)
+        if (isDescending) //depends on users input for asc or desc
         {
           while (dataObjects.ElementAt(j).CompareTo(pivot) < 0)
           {
+            quickSortCount++; //increases the operations count by 1
             j--;
           }
         }
@@ -715,12 +775,14 @@ namespace sorting_data
         {
           while (dataObjects.ElementAt(j).CompareTo(pivot) > 0)
           {
+            quickSortCount++; //increases the operations count by 1
             j--;
           }
         }
         if (i <= j)
         {
           // Swap
+          //creates temporary object tmp to swap the objects through
           Seismic tmp = dataObjects.ElementAt(i);
           dataObjects[i] = dataObjects.ElementAt(j);
           dataObjects[j] = tmp;
@@ -728,48 +790,65 @@ namespace sorting_data
           j--;
         }
       }
+      //recursive methods
       if (left < j)
       {
-        
-        quickSort(dataObjects, left, j, isDescending);
+        quickSort(dataObjects, left, j, isDescending); //Calls quicksort again
       }
 
       if (i < right)
       {
-        
-        quickSort(dataObjects, i, right, isDescending);
+        quickSort(dataObjects, i, right, isDescending); //Calls quicksort again
       }
     }
+
+    //Bubblesort method
     public static void bubbleSort(List<Seismic> dataObjects, bool isDescending)
     {
-      Seismic tmp;
+      Seismic tmp; //temporary Seismic object tmp
+
       for (int i = 0; i < dataObjects.Count(); i++)
       {
         for (int sort = 0; sort < dataObjects.Count() - 1; sort++)
         {
-          if (!isDescending)
+          if (!isDescending) //If user chose ascending
           {
             if (dataObjects.ElementAt(sort).CompareTo(dataObjects.ElementAt(sort + 1)) > 0)
             {
               //Swap
+              //moves data into temporary tmp object and then swaps them around
               tmp = dataObjects.ElementAt(sort + 1);
               dataObjects[sort + 1] = dataObjects[sort];
               dataObjects[sort] = tmp;
+              bubbleSortCount++; //increases the operations count by 1
             }
           }
-          if (isDescending)
+          if (isDescending)//If user chose descending
           {
             if (dataObjects.ElementAt(sort).CompareTo(dataObjects.ElementAt(sort + 1)) < 0)
             {
               //Swap
+              //moves data into temporary tmp object and then swaps them around
               tmp = dataObjects.ElementAt(sort + 1);
               dataObjects[sort + 1] = dataObjects[sort];
               dataObjects[sort] = tmp;
+              bubbleSortCount++; //increases the operations count by 1
             }
           }
         }
       }
     }
-  }
- }
+
+    //public static methods to return the operations total for each of the sorting methods
+    public static int quickSortTotal()
+    {
+      return quickSortCount;
+    }
+    public static int bubbleSortTotal()
+    {
+      return bubbleSortCount;
+    }
+  }//End of class Sorter
+ }//End of namespace sorting_data
+//End of C# program
 
